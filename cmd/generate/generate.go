@@ -8,8 +8,7 @@
 
 package main
 
-//go:generate ./generate_dto_proto.sh dto/doubao.proto
-
+//go:generate ./generate_dto_proto.sh doubao.proto doubao
 //go:generate ./generate_service_proto.sh doubao.proto doubaopb
 func main() {
 
