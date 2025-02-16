@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option go_package = "github.com/yazl-tech/ai-bot/pkg/dto/doubao";
+
+package doubaodto;
+
+message ChatRequest {
+	repeated MessageParam messages = 1;
+	string model = 2;
+	float temperature = 3;
+}
+
+message ChatResponse {
+	string id = 1;
+	Choices choice = 2;	
+}
+
+message MessageParam {
+	oneof content {
+		StringMessage string_content = 1;
+		TypeMessage type_content = 2;
+	}
+}
+
+message StringMessage {
+	string role = 1;
+	string content = 2;
+}
+
+message TypeMessage {
+	message ImageUrl {
+		string url = 1;
+	}
+
+	message Content {
+		string type = 1;
+		string text = 2;
+		ImageUrl image_url = 3;
+	}
+
+	string role = 1;
+	Content content = 2;
+}
+
+message Choices {
+	int64 index = 1;
+	StringMessage message = 2;
+	string finish_reason = 3;
+	int64 created = 4;
+	string model = 5;
+}

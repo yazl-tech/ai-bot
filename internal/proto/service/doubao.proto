@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option go_package = "./doubaopb";
+
+import "dto/doubao.proto";
+
+service DoubaoService {
+	rpc ChatCompletions(doubaodto.ChatRequest) returns (doubaodto.ChatResponse);
+}
