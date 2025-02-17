@@ -16,8 +16,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/yazl-tech/ai-bot/internal/domain/provider/doubao"
 
+	"github.com/yazl-tech/ai-bot/internal/domain/bot/doubao"
 	botpb "github.com/yazl-tech/ai-bot/pkg/proto/bot"
 )
 
