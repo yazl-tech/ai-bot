@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  aibot:
+    build: .
+    environment:
+      - GO_PUZZLE_SERVICE=${SERVICE}:${VERSION}
+    image: ${IMAGE}:${VERSION}
+    restart: always
+    container_name: ${SERVICE} 
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - 28089:28089
+    networks:
+      - yong-network
+    command:
+      - ./server
+      - --useRemoteConfig
+    logging:
+      options:
+        max-size: 100m
+        max-file: 5
+
+networks:
+  yong-network:
+    external: true
+    name: yong-network
