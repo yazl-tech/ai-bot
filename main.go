@@ -12,7 +12,13 @@ import (
 	"github.com/go-puzzles/puzzles/cores"
 	"github.com/go-puzzles/puzzles/pflags"
 	"github.com/go-puzzles/puzzles/plog"
-	"github.com/yazl-tech/ai-bot/config"
+	"github.com/yazl-tech/ai-bot/internal/config"
+	"github.com/yazl-tech/ai-bot/internal/service"
+
+	consulpuzzle "github.com/go-puzzles/puzzles/cores/puzzles/consul-puzzle"
+	grpcpuzzle "github.com/go-puzzles/puzzles/cores/puzzles/grpc-puzzle"
+	grpcuipuzzle "github.com/go-puzzles/puzzles/cores/puzzles/grpcui-puzzle"
+	grpcInterface "github.com/yazl-tech/ai-bot/internal/api/grpc"
 )
 
 var (
@@ -26,7 +32,15 @@ func main() {
 	doubaoConf := new(config.DoubaoConfig)
 	plog.PanicError(doubaoConfFlag(doubaoConf))
 
-	srv := cores.NewPuzzleCore()
+	botService := service.NewAiBotService()
+	grpcSrv := grpcInterface.SetupGrpcServer(botService)
+
+	srv := cores.NewPuzzleCore(
+		cores.WithService(pflags.GetServiceName()),
+		consulpuzzle.WithConsulRegister(),
+		grpcpuzzle.WithCoreGrpcPuzzle(grpcSrv),
+		grpcuipuzzle.WithCoreGrpcUI(),
+	)
 
 	plog.PanicError(cores.Start(srv, port()))
 }

@@ -1,8 +1,10 @@
 syntax = "proto3";
 
-option go_package = "github.com/yazl-tech/ai-bot/pkg/dto/doubao";
+option go_package = "github.com/yazl-tech/ai-bot/pkg/proto/doubao";
 
-package doubaodto;
+service DoubaoHandler {
+	rpc ChatCompletions(ChatRequest) returns (ChatResponse) {}
+}
 
 message ChatRequest {
 	repeated MessageParam messages = 1;

@@ -1,6 +1,6 @@
 // File:		generate.go
 // Created by:	Hoven
-// Created on:	2025-02-16
+// Created on:	2025-02-17
 //
 // This file is part of the Example Project.
 //
@@ -8,8 +8,7 @@
 
 package main
 
-//go:generate ./generate_dto_proto.sh doubao.proto doubao
-//go:generate ./generate_service_proto.sh doubao.proto doubaopb
+//go:generate ./generate_proto.sh doubao.proto doubao
 func main() {
 
 }
