@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package botpb;
+
+option go_package = "github.com/yazl-tech/ai-bot/pkg/proto/bot;botpb";
+
+
+message BotConfig {
+	string api = 1;
+	string api_key = 2;
+}
+
+message ChatOptions {
+	string model = 1;
+	int64 max_token = 2;
+	float temperature = 3;
+	bool stream = 4;
+}
+
+message ChatRequest {
+	repeated Message messages = 1;
+	string model = 2;
+	ChatOptions options = 3;
+}
+
+
+message Message {
+	enum Role {
+		system = 0;
+		user = 1;
+		assistant = 2;
+	}
+
+	Role role = 1;
+	oneof content {
+		string string_content = 2;
+		TypeMessage type_content = 3;
+	}
+}
+
+message StringMessage {
+	string content = 1;
+}
+
+message TypeMessage {
+	enum Type {
+		string = 0;
+		image = 1;
+	}
+
+	message ImageUrl {
+		string url = 1;
+	}
+
+	Type type = 1;
+	string text = 2;
+	ImageUrl image_url = 3;
+}
+
+message ChatResponse {
+	string id = 1;
+	repeated Choice choices = 2;	
+	int64 created = 3;
+	string model = 4;
+}
+
+message Choice {
+	int64 index = 1;
+	Message message = 2;
+	string finish_reason = 3;
+	
+}

@@ -4,10 +4,11 @@
 // - protoc             v4.23.4
 // source: doubao.proto
 
-package doubao
+package doubaopb
 
 import (
 	context "context"
+	bot "github.com/yazl-tech/ai-bot/pkg/proto/bot"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -26,7 +27,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DoubaoHandlerClient interface {
-	ChatCompletions(ctx context.Context, in *ChatRequest, opts ...grpc.CallOption) (*ChatResponse, error)
+	ChatCompletions(ctx context.Context, in *bot.ChatRequest, opts ...grpc.CallOption) (*bot.ChatResponse, error)
 }
 
 type doubaoHandlerClient struct {
@@ -37,9 +38,9 @@ func NewDoubaoHandlerClient(cc grpc.ClientConnInterface) DoubaoHandlerClient {
 	return &doubaoHandlerClient{cc}
 }
 
-func (c *doubaoHandlerClient) ChatCompletions(ctx context.Context, in *ChatRequest, opts ...grpc.CallOption) (*ChatResponse, error) {
+func (c *doubaoHandlerClient) ChatCompletions(ctx context.Context, in *bot.ChatRequest, opts ...grpc.CallOption) (*bot.ChatResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ChatResponse)
+	out := new(bot.ChatResponse)
 	err := c.cc.Invoke(ctx, DoubaoHandler_ChatCompletions_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -51,7 +52,7 @@ func (c *doubaoHandlerClient) ChatCompletions(ctx context.Context, in *ChatReque
 // All implementations must embed UnimplementedDoubaoHandlerServer
 // for forward compatibility.
 type DoubaoHandlerServer interface {
-	ChatCompletions(context.Context, *ChatRequest) (*ChatResponse, error)
+	ChatCompletions(context.Context, *bot.ChatRequest) (*bot.ChatResponse, error)
 	mustEmbedUnimplementedDoubaoHandlerServer()
 }
 
@@ -62,7 +63,7 @@ type DoubaoHandlerServer interface {
 // pointer dereference when methods are called.
 type UnimplementedDoubaoHandlerServer struct{}
 
-func (UnimplementedDoubaoHandlerServer) ChatCompletions(context.Context, *ChatRequest) (*ChatResponse, error) {
+func (UnimplementedDoubaoHandlerServer) ChatCompletions(context.Context, *bot.ChatRequest) (*bot.ChatResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChatCompletions not implemented")
 }
 func (UnimplementedDoubaoHandlerServer) mustEmbedUnimplementedDoubaoHandlerServer() {}
@@ -87,7 +88,7 @@ func RegisterDoubaoHandlerServer(s grpc.ServiceRegistrar, srv DoubaoHandlerServe
 }
 
 func _DoubaoHandler_ChatCompletions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChatRequest)
+	in := new(bot.ChatRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -99,7 +100,7 @@ func _DoubaoHandler_ChatCompletions_Handler(srv interface{}, ctx context.Context
 		FullMethod: DoubaoHandler_ChatCompletions_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DoubaoHandlerServer).ChatCompletions(ctx, req.(*ChatRequest))
+		return srv.(DoubaoHandlerServer).ChatCompletions(ctx, req.(*bot.ChatRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
