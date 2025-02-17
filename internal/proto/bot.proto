@@ -19,10 +19,8 @@ message ChatOptions {
 
 message ChatRequest {
 	repeated Message messages = 1;
-	string model = 2;
-	ChatOptions options = 3;
+	ChatOptions options = 2;
 }
-
 
 message Message {
 	enum Role {
@@ -69,4 +67,9 @@ message Choice {
 	Message message = 2;
 	string finish_reason = 3;
 	
+}
+
+enum ProviderType {
+	Doubao = 0;
+	Openai = 1;
 }

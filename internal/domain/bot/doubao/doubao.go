@@ -10,10 +10,8 @@ package doubao
 
 import (
 	"context"
-	"fmt"
 	"time"
 
-	"github.com/go-puzzles/puzzles/plog"
 	"github.com/go-puzzles/puzzles/putils"
 	"github.com/pkg/errors"
 	"github.com/volcengine/volcengine-go-sdk/service/arkruntime"
@@ -23,12 +21,29 @@ import (
 	botpb "github.com/yazl-tech/ai-bot/pkg/proto/bot"
 )
 
-type ProviderDoubao struct {
-	doubaoClient *arkruntime.Client
-	conf         *botpb.BotConfig
+type DoubaoConfig struct {
+	*botpb.BotConfig `json:"botConfig"`
 }
 
-func NewDoubaoProvider(conf *botpb.BotConfig) *ProviderDoubao {
+func (dc *DoubaoConfig) SetDefault() {
+	if dc.Api == "" {
+		dc.Api = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
+	}
+}
+
+func (dc *DoubaoConfig) Validate() error {
+	if dc.ApiKey == "" {
+		return errors.New("missing API key")
+	}
+	return nil
+}
+
+type ProviderDoubao struct {
+	doubaoClient *arkruntime.Client
+	conf         *DoubaoConfig
+}
+
+func NewDoubaoProvider(conf *DoubaoConfig) *ProviderDoubao {
 	dc := arkruntime.NewClientWithApiKey(
 		conf.ApiKey,
 		arkruntime.WithBaseUrl(conf.GetApi()),
@@ -38,19 +53,6 @@ func NewDoubaoProvider(conf *botpb.BotConfig) *ProviderDoubao {
 	return &ProviderDoubao{
 		doubaoClient: dc,
 	}
-}
-
-type doubaoRequest struct {
-	Model       string          `json:"model"`
-	Messages    []doubaoMessage `json:"messages"`
-	Stream      bool            `json:"stream"`
-	Temperature float32         `json:"temperature"`
-	MaxToken    int             `json:"max_token"`
-}
-
-type doubaoMessage struct {
-	Role    string `json:"role"`
-	Content any    `json:"content"`
 }
 
 func (d *ProviderDoubao) parseStirngMessage(idx int, msg *botpb.Message, content *botpb.Message_StringContent) (dbMsg *model.ChatCompletionMessage, err error) {
@@ -167,8 +169,6 @@ func (d *ProviderDoubao) Chat(ctx context.Context, messages []*botpb.Message, op
 		MaxTokens:   int(options.GetMaxToken()),
 		Temperature: options.GetTemperature(),
 	}
-
-	fmt.Println(plog.Jsonify(req))
 
 	resp, err := d.doubaoClient.CreateChatCompletion(ctx, req)
 	if err != nil {

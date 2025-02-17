@@ -12,8 +12,10 @@ import (
 	"github.com/go-puzzles/puzzles/cores"
 	"github.com/go-puzzles/puzzles/pflags"
 	"github.com/go-puzzles/puzzles/plog"
-	"github.com/yazl-tech/ai-bot/internal/config"
+	"github.com/yazl-tech/ai-bot/internal/domain/bot"
+	"github.com/yazl-tech/ai-bot/internal/domain/bot/doubao"
 	"github.com/yazl-tech/ai-bot/internal/service"
+	botpb "github.com/yazl-tech/ai-bot/pkg/proto/bot"
 
 	consulpuzzle "github.com/go-puzzles/puzzles/cores/puzzles/consul-puzzle"
 	grpcpuzzle "github.com/go-puzzles/puzzles/cores/puzzles/grpc-puzzle"
@@ -23,16 +25,20 @@ import (
 
 var (
 	port           = pflags.Int("port", 28089, "ai bot port to listen on")
-	doubaoConfFlag = pflags.Struct("doubao", (*config.DoubaoConfig)(nil), "doubao config")
+	doubaoConfFlag = pflags.Struct("doubao", (*doubao.DoubaoConfig)(nil), "doubao config")
 )
 
 func main() {
 	pflags.Parse()
 
-	doubaoConf := new(config.DoubaoConfig)
+	doubaoConf := new(doubao.DoubaoConfig)
 	plog.PanicError(doubaoConfFlag(doubaoConf))
 
-	botService := service.NewAiBotService()
+	botFactory := bot.NewBotFactory()
+	doubaoProvider := doubao.NewDoubaoProvider(doubaoConf)
+	botFactory.RegisterProvider(botpb.ProviderType_Doubao, doubaoProvider)
+
+	botService := service.NewAiBotService(botFactory)
 	grpcSrv := grpcInterface.SetupGrpcServer(botService)
 
 	srv := cores.NewPuzzleCore(

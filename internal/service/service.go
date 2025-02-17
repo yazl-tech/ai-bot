@@ -8,9 +8,27 @@
 
 package service
 
+import (
+	"github.com/yazl-tech/ai-bot/internal/domain/bot"
+	"github.com/yazl-tech/ai-bot/pkg/exception"
+	botpb "github.com/yazl-tech/ai-bot/pkg/proto/bot"
+)
+
 type AiBotService struct {
+	botFactory *bot.ProviderFactory
 }
 
-func NewAiBotService() *AiBotService {
-	return &AiBotService{}
+func NewAiBotService(botFactory *bot.ProviderFactory) *AiBotService {
+	return &AiBotService{
+		botFactory: botFactory,
+	}
+}
+
+func (s *AiBotService) GetBot(pt botpb.ProviderType) (bot.Provider, error) {
+	provider, exists := s.botFactory.GetProvider(pt)
+	if !exists {
+		return nil, exception.ErrProviderNotFound
+	}
+
+	return provider, nil
 }

@@ -18,12 +18,25 @@ import (
 
 type DoubaoGrpcService struct {
 	doubaopb.UnimplementedDoubaoHandlerServer
+	s *service.AiBotService
 }
 
 func NewDoubaoGrpcService(s *service.AiBotService) *DoubaoGrpcService {
-	return &DoubaoGrpcService{}
+	return &DoubaoGrpcService{
+		s: s,
+	}
 }
 
 func (ds *DoubaoGrpcService) ChatCompletions(ctx context.Context, req *botpb.ChatRequest) (*botpb.ChatResponse, error) {
-	return &botpb.ChatResponse{}, nil
+	botProvider, err := ds.s.GetBot(botpb.ProviderType_Doubao)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := botProvider.Chat(ctx, req.GetMessages(), req.GetOptions())
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
