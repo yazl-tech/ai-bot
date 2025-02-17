@@ -12,17 +12,18 @@ import (
 	"context"
 
 	"github.com/yazl-tech/ai-bot/internal/service"
-	"github.com/yazl-tech/ai-bot/pkg/proto/doubao"
+	botpb "github.com/yazl-tech/ai-bot/pkg/proto/bot"
+	doubaopb "github.com/yazl-tech/ai-bot/pkg/proto/doubao"
 )
 
 type DoubaoGrpcService struct {
-	doubao.UnimplementedDoubaoHandlerServer
+	doubaopb.UnimplementedDoubaoHandlerServer
 }
 
 func NewDoubaoGrpcService(s *service.AiBotService) *DoubaoGrpcService {
 	return &DoubaoGrpcService{}
 }
 
-func (ds *DoubaoGrpcService) ChatCompletions(ctx context.Context, req *doubao.ChatRequest) (*doubao.ChatResponse, error) {
-	return &doubao.ChatResponse{}, nil
+func (ds *DoubaoGrpcService) ChatCompletions(ctx context.Context, req *botpb.ChatRequest) (*botpb.ChatResponse, error) {
+	return &botpb.ChatResponse{}, nil
 }

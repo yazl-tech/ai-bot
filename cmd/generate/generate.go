@@ -9,6 +9,7 @@
 package main
 
 //go:generate ./generate_proto.sh doubao.proto doubao
+//go:generate ./generate_proto.sh bot.proto bot
 func main() {
 
 }

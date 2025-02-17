@@ -43,5 +43,9 @@ func (e *Exception) Message() string {
 }
 
 var (
-	ErrMissingApiKey = NewExceptionWithMessage(500, "Missing API KEY")
+	ErrMissingApiKey                = NewExceptionWithMessage(500, "Missing API KEY")
+	ErrSystemMessageMustInIndexZero = NewExceptionWithMessage(400, "系统消息必须位于消息列表第一个")
+	ErrInvalidMessageType           = NewExceptionWithMessage(400, "不支持的消息类型")
+	ErrInvalidContentType           = NewExceptionWithMessage(400, "不支持的信息类型")
+	ErrResponseNoChoice             = NewExceptionWithMessage(400, "响应中没有输出")
 )

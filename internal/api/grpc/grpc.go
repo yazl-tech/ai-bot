@@ -9,10 +9,11 @@
 package grpcInterface
 
 import (
-	grpcService "github.com/yazl-tech/ai-bot/internal/api/grpc/service"
 	"github.com/yazl-tech/ai-bot/internal/service"
-	"github.com/yazl-tech/ai-bot/pkg/proto/doubao"
 	"google.golang.org/grpc"
+
+	grpcService "github.com/yazl-tech/ai-bot/internal/api/grpc/service"
+	doubaopb "github.com/yazl-tech/ai-bot/pkg/proto/doubao"
 )
 
 type grpcInitFunc func(srv *grpc.Server)
@@ -20,7 +21,7 @@ type grpcInitFunc func(srv *grpc.Server)
 func setupGrpcServerFn(s *service.AiBotService) grpcInitFunc {
 	return func(srv *grpc.Server) {
 		doubaoSrv := grpcService.NewDoubaoGrpcService(s)
-		doubao.RegisterDoubaoHandlerServer(srv, doubaoSrv)
+		doubaopb.RegisterDoubaoHandlerServer(srv, doubaoSrv)
 	}
 }
 
