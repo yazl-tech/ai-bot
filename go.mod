@@ -3,6 +3,7 @@ module github.com/yazl-tech/ai-bot
 go 1.23.4
 
 require (
+	github.com/go-errors/errors v1.5.1
 	github.com/go-puzzles/puzzles v1.1.45
 	google.golang.org/grpc v1.70.0
 	google.golang.org/protobuf v1.36.5

@@ -11,7 +11,7 @@ package doubao
 import (
 	"context"
 
-	"github.com/yazl-tech/ai-bot/pkg/dto/doubao"
+	"github.com/yazl-tech/ai-bot/pkg/proto/doubao"
 )
 
 type Service interface {
