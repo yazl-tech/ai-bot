@@ -9,6 +9,9 @@
 package service
 
 import (
+	"context"
+
+	"github.com/go-puzzles/puzzles/plog"
 	"github.com/yazl-tech/ai-bot/internal/domain/bot"
 	"github.com/yazl-tech/ai-bot/pkg/exception"
 	botpb "github.com/yazl-tech/ai-bot/pkg/proto/bot"
@@ -31,4 +34,25 @@ func (s *AiBotService) GetBot(pt botpb.ProviderType) (bot.Provider, error) {
 	}
 
 	return provider, nil
+}
+
+func (s *AiBotService) Chat(ctx context.Context, pt botpb.ProviderType, req *botpb.ChatRequest) (*botpb.ChatResponse, error) {
+	bot, err := s.GetBot(pt)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := bot.Chat(ctx, req.GetMessages(), req.GetOptions())
+	if err != nil {
+		plog.Errorc(ctx, "%v chat error: %v", pt.String(), err)
+		return nil, err
+	}
+
+	usage := resp.GetUsage()
+	plog.Infoc(
+		ctx, "%v chat usage -> (TotalToken: %d, promptToken: %d, completionTokens: %d)",
+		pt.String(), usage.GetTotalTokens(), usage.GetPromptTokens(), usage.GetCompletionTokens(),
+	)
+
+	return resp, nil
 }

@@ -60,6 +60,13 @@ message ChatResponse {
 	repeated Choice choices = 2;	
 	int64 created = 3;
 	string model = 4;
+	Usage usage = 5;
+}
+
+message Usage {
+	int64 prompt_tokens = 1;
+	int64 completion_tokens = 2;
+	int64 total_tokens = 3;
 }
 
 message Choice {

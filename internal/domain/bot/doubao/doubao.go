@@ -151,6 +151,11 @@ func (d *ProviderDoubao) convertResponse(resp *model.ChatCompletionResponse) (*b
 		Created: resp.Created,
 		Model:   resp.Model,
 		Choices: botChoices,
+		Usage: &botpb.Usage{
+			TotalTokens:      int64(resp.Usage.TotalTokens),
+			PromptTokens:     int64(resp.Usage.PromptTokens),
+			CompletionTokens: int64(resp.Usage.CompletionTokens),
+		},
 	}
 
 	return botResp, nil

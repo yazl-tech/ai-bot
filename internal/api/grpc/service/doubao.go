@@ -28,15 +28,5 @@ func NewDoubaoGrpcService(s *service.AiBotService) *DoubaoGrpcService {
 }
 
 func (ds *DoubaoGrpcService) ChatCompletions(ctx context.Context, req *botpb.ChatRequest) (*botpb.ChatResponse, error) {
-	botProvider, err := ds.s.GetBot(botpb.ProviderType_Doubao)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := botProvider.Chat(ctx, req.GetMessages(), req.GetOptions())
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+	return ds.s.Chat(ctx, botpb.ProviderType_Doubao, req)
 }
